@@ -5,7 +5,7 @@ export function Header() {
       <img src={Logo} alt="Logo habit tracker" />
       <button
         type="button"
-        className="px-6 py-6 bg-transparent border border-violet-500 rounded-lg text-white text-center"
+        className="px-6 py-6 bg-transparent border border-violet-500 hover:border-violet-300 rounded-lg text-white text-center"
       >
         <span className="text-violet-500 pr-3">+</span> New Habit
       </button>
