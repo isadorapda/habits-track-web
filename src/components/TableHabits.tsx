@@ -1,5 +1,11 @@
 import { WEEK_DAYS_CHAR } from '../constants/weekDays'
+import { generateDates } from '../utils/generateDates'
 import { HabitsAtDay } from './HabitsAtDay'
+
+const summaryDates = generateDates()
+
+const minimumDatesToShow = 18 * 7
+const totalEmptyDates = minimumDatesToShow - summaryDates.length
 
 export function TableHabits() {
   return (
@@ -15,16 +21,13 @@ export function TableHabits() {
         ))}
       </div>
       <div className="grid grid-rows-7 grid-flow-col gap-3">
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
-        <HabitsAtDay />
+        {summaryDates.map((date, i) => (
+          <HabitsAtDay completed={4} amount={5} key={date.toString()} />
+        ))}
+        {totalEmptyDates > 0 &&
+          Array.from({ length: totalEmptyDates }).map((_, i) => (
+            <div className="w-10 h-10 border-2 rounded-lg bg-zinc-900 border-zinc-800 opacity-40 cursor-not-allowed" />
+          ))}
       </div>
     </div>
   )
