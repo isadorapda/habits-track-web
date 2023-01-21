@@ -20,20 +20,18 @@ export function AddNewHabitForm() {
         Schedule
       </label>
       <div className="flex flex-col w-full gap-2 mt-3">
-        {WEEK_DAYS.map((weekDay, index) => (
-          <>
-            <Checkbox.Root
-              key={weekDay}
-              className="flex items-center gap-3 group focus:outline-none"
-            >
-              <div className="w-8 h-8 bg-zinc-900 border-2 border-zinc-800 rounded-lg flex items-center justify-center">
-                <Checkbox.Indicator>
-                  <Check size={20} className="text-white" />
-                </Checkbox.Indicator>
-              </div>
-              <label className="capitalize">{weekDay}</label>
-            </Checkbox.Root>
-          </>
+        {WEEK_DAYS.map((weekDay) => (
+          <Checkbox.Root
+            key={weekDay}
+            className="flex items-center gap-3 group focus:outline-none group"
+          >
+            <div className="w-8 h-8 bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 rounded-lg flex items-center justify-center">
+              <Checkbox.Indicator>
+                <Check size={20} className="text-white" />
+              </Checkbox.Indicator>
+            </div>
+            <label className="capitalize">{weekDay}</label>
+          </Checkbox.Root>
         ))}
       </div>
       <button
