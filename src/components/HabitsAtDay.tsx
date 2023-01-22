@@ -1,16 +1,26 @@
-import * as Checkbox from '@radix-ui/react-checkbox'
 import * as Popover from '@radix-ui/react-popover'
+import dayjs from 'dayjs'
 import { clsx } from 'clsx'
-import { Check } from 'phosphor-react'
 import { ProgressBar } from './ProgressBar'
+import { DailyHabitsPopover } from './DailyHabitsPopover'
 
 interface AmountCompletedProps {
-  completed: number
-  amount: number
+  completed?: number
+  amount?: number
+  date: Date
 }
 
-export function HabitsAtDay({ completed, amount }: AmountCompletedProps) {
-  const completedPercentage = Math.round((completed / amount) * 100)
+export function HabitsAtDay({
+  completed = 0,
+  amount = 0,
+  date,
+}: AmountCompletedProps) {
+  const completedPercentage =
+    amount > 0 ? Math.round((completed / amount) * 100) : 0
+
+  const dayAndMonth = dayjs(date).format('DD/MM')
+  const weekday = dayjs(date).format('dddd')
+
   return (
     <Popover.Root>
       <Popover.Trigger
@@ -30,21 +40,12 @@ export function HabitsAtDay({ completed, amount }: AmountCompletedProps) {
       <Popover.Portal>
         <Popover.Content className="min-w-[320px] bg-zinc-900 p-6 flex flex-col rounded-2xl">
           <Popover.Arrow className="w-7 h-4 fill-zinc-900" />
-          <span className="text-zinc-400 font-semibold">monday</span>
-          <span className="text-3xl text-white font-extrabold mt-2">23/01</span>
+          <span className="text-zinc-400 font-semibold">{weekday}</span>
+          <span className="text-3xl text-white font-extrabold mt-2">
+            {dayAndMonth}
+          </span>
           <ProgressBar progress={completedPercentage} />
-          <div className="mt-6 flex flex-col gap-3">
-            <Checkbox.Root className="flex items-center gap-3 group">
-              <div className="flex justify-center items-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 w-8 h-8 rounded-lg">
-                <Checkbox.Indicator>
-                  <Check size={20} className="text-white" />
-                </Checkbox.Indicator>
-              </div>
-              <span className="text-white capitalize font-semibold text-xl group-data-[state=checked]:line-through group-data-[state=checked]:text-zinc-400">
-                task
-              </span>
-            </Checkbox.Root>
-          </div>
+          <DailyHabitsPopover date={date} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

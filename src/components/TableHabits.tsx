@@ -1,13 +1,31 @@
-import { WEEK_DAYS_CHAR } from '../constants/weekDays'
+import { useEffect, useState } from 'react'
+import { SummaryHabits } from '../@types/model'
+import dayjs from 'dayjs'
+import { api } from '../lib/axios'
 import { generateDates } from '../utils/generateDates'
+import { WEEK_DAYS_CHAR } from '../constants/weekDays'
 import { HabitsAtDay } from './HabitsAtDay'
 
 const summaryDates = generateDates()
-
 const minimumDatesToShow = 18 * 7
 const totalEmptyDates = minimumDatesToShow - summaryDates.length
 
 export function TableHabits() {
+  const [summaryData, setSummaryData] = useState<SummaryHabits[]>([])
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        await api
+          .get('/summary')
+          .then((response) => setSummaryData(response.data))
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
     <div className="w-full flex ">
       <div className="grid grid-rows-7 grid-flow-row gap-3">
@@ -21,12 +39,25 @@ export function TableHabits() {
         ))}
       </div>
       <div className="grid grid-rows-7 grid-flow-col gap-3">
-        {summaryDates.map((date, i) => (
-          <HabitsAtDay completed={4} amount={5} key={date.toString()} />
-        ))}
+        {summaryDates.map((date) => {
+          const findDay = summaryData.find((day) =>
+            dayjs(date).isSame(day.date, 'day')
+          )
+          return (
+            <HabitsAtDay
+              date={date}
+              completed={findDay?.completed}
+              amount={findDay?.amount}
+              key={date.toString()}
+            />
+          )
+        })}
         {totalEmptyDates > 0 &&
           Array.from({ length: totalEmptyDates }).map((_, i) => (
-            <div className="w-10 h-10 border-2 rounded-lg bg-zinc-900 border-zinc-800 opacity-40 cursor-not-allowed" />
+            <div
+              key={i}
+              className="w-10 h-10 border-2 rounded-lg bg-zinc-900 border-zinc-800 opacity-40 cursor-not-allowed"
+            />
           ))}
       </div>
     </div>
