@@ -14,20 +14,11 @@ export function TableHabits() {
   const [summaryData, setSummaryData] = useState<SummaryHabits[]>([])
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        await api
-          .get('/summary')
-          .then((response) => setSummaryData(response.data))
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    fetchData()
+    api.get('/summary').then((response) => setSummaryData(response.data))
   }, [])
 
   return (
-    <div className="w-full flex ">
+    <div className="w-full flex">
       <div className="grid grid-rows-7 grid-flow-row gap-3">
         {WEEK_DAYS_CHAR.map((day, i) => (
           <div
@@ -39,19 +30,20 @@ export function TableHabits() {
         ))}
       </div>
       <div className="grid grid-rows-7 grid-flow-col gap-3">
-        {summaryDates.map((date) => {
-          const findDay = summaryData.find((day) =>
-            dayjs(date).isSame(day.date, 'day')
-          )
-          return (
-            <HabitsAtDay
-              date={date}
-              completed={findDay?.completed}
-              amount={findDay?.amount}
-              key={date.toString()}
-            />
-          )
-        })}
+        {summaryData.length &&
+          summaryDates.map((date) => {
+            const findDay = summaryData.find((day) =>
+              dayjs(date).isSame(day.date, 'day')
+            )
+            return (
+              <HabitsAtDay
+                key={date.toString()}
+                date={date}
+                defaultCompleted={findDay?.completed}
+                amount={findDay?.amount}
+              />
+            )
+          })}
         {totalEmptyDates > 0 &&
           Array.from({ length: totalEmptyDates }).map((_, i) => (
             <div
